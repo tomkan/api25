@@ -14,33 +14,34 @@ import java.util.List;
 @RestController
 @RequestMapping("/items")
 @Tag(name = "Items", description = "Item management API")
+@CrossOrigin
 public class ItemControlller {
 
     private final ItemService itemService;
 
     @Operation(summary = "Get all items", description = "Returns a list of all items")
     @GetMapping
-    public List<ItemDTO> getItems() {
+    public List<ItemResponse> getItems() {
         return itemService.listAll();
     }
 
     @Operation(summary = "Get item by ID", description = "Returns a single item by its ID")
     @GetMapping("/{id}")
-    public ItemDTO getItem(@PathVariable Long id) {
+    public ItemResponse getItem(@PathVariable Long id) {
         return itemService.findById(id);
     }
 
     @Operation(summary = "Create a new item", description = "Creates a new item and returns it")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ItemDTO createItem(@RequestBody ItemDTO itemDTO) {
-        return itemService.create(itemDTO);
+    public ItemResponse createItem(@RequestBody ItemRequest itemRequest) {
+        return itemService.create(itemRequest);
     }
 
     @Operation(summary = "Update an existing item", description = "Updates an item by its ID")
     @PutMapping("/{id}")
-    public ItemDTO updateItem(@PathVariable Long id, @RequestBody ItemDTO itemDTO) {
-        return itemService.update(id, itemDTO);
+    public ItemResponse updateItem(@PathVariable Long id, @RequestBody ItemRequest itemRequest) {
+        return itemService.update(id, itemRequest);
     }
 
     @Operation(summary = "Delete an item", description = "Deletes an item by its ID")

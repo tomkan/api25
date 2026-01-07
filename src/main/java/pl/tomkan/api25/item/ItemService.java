@@ -16,32 +16,31 @@ public class ItemService {
 
     private final ItemRepository itemRepository;
 
-    public List<ItemDTO> listAll() {
+    public List<ItemResponse> listAll() {
         return itemRepository.findAll().stream().map(
-                item -> new ItemDTO(item.getId(), item.getName())
+                item -> new ItemResponse(item.getId(), item.getName(), true)
         ).toList();
     }
 
-    public ItemDTO findById(Long id) {
+    public ItemResponse findById(Long id) {
         return itemRepository.findById(id)
-                .map(item -> new ItemDTO(item.getId(), item.getName()))
+                .map(item -> new ItemResponse(item.getId(), item.getName(), true))
                 .orElseThrow(() -> new EntityNotFoundException("Item not found with id: " + id));
     }
 
-    public ItemDTO create(ItemDTO itemDTO) {
+    public ItemResponse create(ItemRequest itemResponse) {
         Item item = new Item();
-        item.setId(itemDTO.id());
-        item.setName(itemDTO.name());
+        item.setName(itemResponse.name());
         Item savedItem = itemRepository.save(item);
-        return new ItemDTO(savedItem.getId(), savedItem.getName());
+        return new ItemResponse(savedItem.getId(), savedItem.getName(), true);
     }
 
-    public ItemDTO update(Long id, ItemDTO itemDTO) {
+    public ItemResponse update(Long id, ItemRequest itemResponse) {
         Item item = itemRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Item not found with id: " + id));
-        item.setName(itemDTO.name());
+        item.setName(itemResponse.name());
         Item updatedItem = itemRepository.save(item);
-        return new ItemDTO(updatedItem.getId(), updatedItem.getName());
+        return new ItemResponse(updatedItem.getId(), updatedItem.getName(), true);
     }
 
     public void delete(Long id) {
